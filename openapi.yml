@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  description: This API handles event bookings and cancellations
+  version: "1.0.0"
+  title: Event Planning API
+  contact:
+    email: rchan200@my.bcit.ca
+tags:
+  - name: bookings
+    description: Operations available for bookings
+paths:
+  /bookings/book:
+    get:
+      tags:
+        - devices
+      summary: gets new bookings
+      operationId: app.get_bookings
+      description: Gets bookings added after a timestamp
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description: Successfully returned a list of booking events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Event'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        
+  /bookings/cancel:
+    get:
+      tags:
+        - devices
+      summary: gets new cancellations
+      operationId: app.get_cancels
+      description: Gets cancellations added after a timestamp
+      parameters:
+        - name: start_timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+        - name: end_timestamp
+          in: query
+          description: Limits the number of items on a page
+          schema:
+            type: string
+            format: date-time
+            example: 2016-08-29T09:12:33.001Z
+      responses:
+        '200':
+          description: Successfully returned a list of cancel events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventCancel'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /health:
+    get:
+      description: Returns health status
+      operationId: app.health
+      responses:
+        '200':
+          description: Successfully returned health status
+        
+        
+components:
+  schemas:
+    Event:
+      required:
+        - event_id
+        - name
+        - venue
+        - date
+        - duration
+        - attendees
+      properties:
+        event_id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: Bob's Birthday
+        venue:
+          type: string
+          example: Paul's Pizza
+        date:
+          type: string
+          format: date-time
+          example: '2023-09-28T13:30:00'
+        duration:
+          type: integer
+          example: 180
+        attendees:
+          type: integer
+          example: 10
+        trace_id:
+          type: string
+          format: uuid
+          example: d696f855-1cff-472b-b33e-129e8cb30a8b
+      type: object
+    
+    EventCancel:
+      required:
+        - cancel_id
+        - name
+        - venue
+        - date
+        - reason
+        - refund_price
+        - attendees
+      properties:
+        cancel_id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: Cat Owner Meet-up
+        venue:
+          type: string
+          example: Leaf Park
+        date:
+          type: string
+          format: date-time
+          example: '2023-010-10T13:30:00'
+        reason:
+          type: string
+          example: thunderstorm
+        refund_price:
+          type: number
+          example: 5.00
+        attendees:
+          type: integer
+          example: 20
+        trace_id:
+          type: string
+          format: uuid
+          example: d696f855-1cff-472b-b33e-129e8cb30a8b
+      type: object
