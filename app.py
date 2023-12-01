@@ -132,6 +132,7 @@ def get_cancels(start_timestamp, end_timestamp):
 
 def process_messages():
     logger.info("Demo")
+    
     """ Process event messages """
     hostname = "%s:%d" % (app_config["events"]["hostname"],
     app_config["events"]["port"])
